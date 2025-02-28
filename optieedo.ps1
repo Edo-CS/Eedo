@@ -48,7 +48,7 @@ function Apply-Optimizations {
 
     if ($checkboxServices.Checked) {
         # Désactivation des services inutiles
-        $servicesToDisable = @(wuauserv, bits, Spooler, DiagTrack)
+        $servicesToDisable = @("wuauserv", "bits", "Spooler", "DiagTrack")
         foreach ($service in $servicesToDisable) {
             Set-Service -Name $service -StartupType Disabled
             Stop-Service -Name $service
@@ -80,7 +80,7 @@ function Apply-Optimizations {
     }
 
     # Affichage d'un message de confirmation
-    [System.Windows.Forms.MessageBox]Show(Optimisations terminées !)
+    [System.Windows.Forms.MessageBox]::Show("Optimisations terminées !")
 }
 
 # Ajouter le bouton et les cases à cocher au formulaire
