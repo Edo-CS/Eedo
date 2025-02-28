@@ -1,80 +1,74 @@
-# Eedo Tool - PowerShell GUI Script
+# Eedo Tool - Windows Optimization Script
+# Version: 1.0
+# Interface graphique avec toutes les options demandées
 
-# Importation des modules nécessaires
 Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
 
 # Création de la fenêtre principale
-$form = New-Object System.Windows.Forms.Form
-$form.Text = "Eedo Tool"
-$form.Size = New-Object System.Drawing.Size(600, 700)
-$form.StartPosition = "CenterScreen"
+$Form = New-Object System.Windows.Forms.Form
+$Form.Text = "Eedo Tool - Windows Optimizer"
+$Form.Size = New-Object System.Drawing.Size(800,600)
+$Form.BackColor = "#1E1E1E"
+$Form.ForeColor = "#FFFFFF"
 
-# Ajout d'un label titre
-$label = New-Object System.Windows.Forms.Label
-$label.Text = "Eedo Tool - Optimisation Windows"
-$label.AutoSize = $true
-$label.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Bold)
-$label.Location = New-Object System.Drawing.Point(150,10)
-$form.Controls.Add($label)
+# Ajout d'un label pour le titre
+$Title = New-Object System.Windows.Forms.Label
+$Title.Text = "Eedo Tool - Windows Optimization"
+$Title.Size = New-Object System.Drawing.Size(780,30)
+$Title.Location = New-Object System.Drawing.Point(10,10)
+$Title.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Bold)
+$Form.Controls.Add($Title)
 
-# Création d'un onglet principal
-$tabControl = New-Object System.Windows.Forms.TabControl
-$tabControl.Size = New-Object System.Drawing.Size(580, 600)
-$tabControl.Location = New-Object System.Drawing.Point(10, 40)
-
-# Onglet Optimisations
-$tabOptimizations = New-Object System.Windows.Forms.TabPage
-$tabOptimizations.Text = "Optimisations"
-$tabControl.TabPages.Add($tabOptimizations)
-
-# Onglet Installation Applications
-$tabApps = New-Object System.Windows.Forms.TabPage
-$tabApps.Text = "Installation Apps"
-$tabControl.TabPages.Add($tabApps)
-
-$form.Controls.Add($tabControl)
-
-# Checkbox pour les optimisations
-$optimizations = @(
-    "Créer un point de restauration",
-    "Supprimer les fichiers temporaires",
-    "Désactiver la télémétrie",
-    "Désactiver GameDVR",
-    "Désactiver le suivi de localisation",
-    "Désactiver les applications en arrière-plan",
-    "Désactiver Edge et OneDrive",
-    "Activer le clic droit pour fermer une tâche",
-    "Optimiser les performances de l'affichage",
-    "Désactiver Copilot et autres services inutiles"
+# Ajout des checkboxes pour les optimisations
+$Tweaks = @(
+    "Create Restore Point",
+    "Delete Temporary Files",
+    "Disable Consumer Features",
+    "Disable Telemetry",
+    "Disable Activity History",
+    "Disable GameDVR",
+    "Disable Hibernation",
+    "Disable Homegroup",
+    "Disable Location Tracking",
+    "Disable Storage Sense",
+    "Disable Wifi-Sense",
+    "Enable End Task With Right Click",
+    "Run Disk Cleanup",
+    "Change Windows Terminal default: PowerShell 5 -> PowerShell 7",
+    "Disable PowerShell 7 Telemetry",
+    "Disable Recall",
+    "Set Hibernation as default (good for laptops)",
+    "Set Services to Manual",
+    "Debloat Edge"
 )
 
-$checkboxes = @()
-$y = 20
-foreach ($opt in $optimizations) {
-    $chk = New-Object System.Windows.Forms.CheckBox
-    $chk.Text = $opt
-    $chk.Location = New-Object System.Drawing.Point(20, $y)
-    $chk.AutoSize = $true
-    $checkboxes += $chk
-    $tabOptimizations.Controls.Add($chk)
-    $y += 30
+$CheckBoxes = @{}
+$yPos = 50
+
+foreach ($tweak in $Tweaks) {
+    $Checkbox = New-Object System.Windows.Forms.CheckBox
+    $Checkbox.Text = $tweak
+    $Checkbox.Location = New-Object System.Drawing.Point(20, $yPos)
+    $Checkbox.ForeColor = "#FFFFFF"
+    $Form.Controls.Add($Checkbox)
+    $CheckBoxes[$tweak] = $Checkbox
+    $yPos += 25
 }
 
-# Bouton d'exécution des optimisations
-$btnApply = New-Object System.Windows.Forms.Button
-$btnApply.Text = "Appliquer"
-$btnApply.Location = New-Object System.Drawing.Point(230, 500)
-$btnApply.Add_Click({
-    foreach ($chk in $checkboxes) {
-        if ($chk.Checked) {
-            Write-Output "Activation: $($chk.Text)"
-        } else {
-            Write-Output "Désactivation: $($chk.Text)"
+# Bouton pour appliquer les optimisations
+$ApplyButton = New-Object System.Windows.Forms.Button
+$ApplyButton.Text = "Run Tweaks"
+$ApplyButton.Location = New-Object System.Drawing.Point(20, $yPos + 10)
+$ApplyButton.BackColor = "#007ACC"
+$ApplyButton.ForeColor = "#FFFFFF"
+$ApplyButton.Add_Click({
+    foreach ($tweak in $CheckBoxes.Keys) {
+        if ($CheckBoxes[$tweak].Checked) {
+            Write-Host "Activating: $tweak" -ForegroundColor Green
         }
     }
 })
-$tabOptimizations.Controls.Add($btnApply)
+$Form.Controls.Add($ApplyButton)
 
-# Lancer l'interface
-$form.ShowDialog()
+# Affichage de l'interface
+$Form.ShowDialog()
