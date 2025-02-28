@@ -1,111 +1,80 @@
-# Charger les assemblies pour l'interface graphique
+# Eedo Tool - PowerShell GUI Script
+
+# Importation des modules nécessaires
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# Creation de la fenetre principale
+# Création de la fenêtre principale
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Eedo Tools - Windows Optimization"
-$form.Size = New-Object System.Drawing.Size(800, 700)
-$form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-$form.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28)
-$form.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+$form.Text = "Eedo Tool"
+$form.Size = New-Object System.Drawing.Size(600, 700)
+$form.StartPosition = "CenterScreen"
 
-# Creation d'un onglet principal
+# Ajout d'un label titre
+$label = New-Object System.Windows.Forms.Label
+$label.Text = "Eedo Tool - Optimisation Windows"
+$label.AutoSize = $true
+$label.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Bold)
+$label.Location = New-Object System.Drawing.Point(150,10)
+$form.Controls.Add($label)
+
+# Création d'un onglet principal
 $tabControl = New-Object System.Windows.Forms.TabControl
-$tabControl.Size = New-Object System.Drawing.Size(760, 600)
-$tabControl.Location = New-Object System.Drawing.Point(20, 20)
-$form.Controls.Add($tabControl)
+$tabControl.Size = New-Object System.Drawing.Size(580, 600)
+$tabControl.Location = New-Object System.Drawing.Point(10, 40)
 
 # Onglet Optimisations
 $tabOptimizations = New-Object System.Windows.Forms.TabPage
-$tabOptimizations.Text = "Windows Optimizations"
-$tabOptimizations.BackColor = [System.Drawing.Color]::FromArgb(37, 37, 38)
-$tabControl.Controls.Add($tabOptimizations)
+$tabOptimizations.Text = "Optimisations"
+$tabControl.TabPages.Add($tabOptimizations)
 
-# Onglet Installation Apps
+# Onglet Installation Applications
 $tabApps = New-Object System.Windows.Forms.TabPage
-$tabApps.Text = "Install Applications"
-$tabApps.BackColor = [System.Drawing.Color]::FromArgb(37, 37, 38)
-$tabControl.Controls.Add($tabApps)
+$tabApps.Text = "Installation Apps"
+$tabControl.TabPages.Add($tabApps)
 
-# Creation des groupes de tweaks
-function Add-GroupBox {
-    param ($title, $yPosition, $parent)
-    $groupBox = New-Object System.Windows.Forms.GroupBox
-    $groupBox.Text = $title
-    $groupBox.ForeColor = [System.Drawing.Color]::White
-    $groupBox.Size = New-Object System.Drawing.Size(720, 120)
-    $groupBox.Location = New-Object System.Drawing.Point(15, $yPosition)
-    $parent.Controls.Add($groupBox)
-    return $groupBox
+$form.Controls.Add($tabControl)
+
+# Checkbox pour les optimisations
+$optimizations = @(
+    "Créer un point de restauration",
+    "Supprimer les fichiers temporaires",
+    "Désactiver la télémétrie",
+    "Désactiver GameDVR",
+    "Désactiver le suivi de localisation",
+    "Désactiver les applications en arrière-plan",
+    "Désactiver Edge et OneDrive",
+    "Activer le clic droit pour fermer une tâche",
+    "Optimiser les performances de l'affichage",
+    "Désactiver Copilot et autres services inutiles"
+)
+
+$checkboxes = @()
+$y = 20
+foreach ($opt in $optimizations) {
+    $chk = New-Object System.Windows.Forms.CheckBox
+    $chk.Text = $opt
+    $chk.Location = New-Object System.Drawing.Point(20, $y)
+    $chk.AutoSize = $true
+    $checkboxes += $chk
+    $tabOptimizations.Controls.Add($chk)
+    $y += 30
 }
 
-$essentialGroup = Add-GroupBox "Essential Tweaks" 10 $tabOptimizations
-$advancedGroup = Add-GroupBox "Advanced Tweaks (Caution)" 140 $tabOptimizations
-$customizeGroup = Add-GroupBox "Customize Preferences" 270 $tabOptimizations
-$performanceGroup = Add-GroupBox "Performance Plans" 400 $tabOptimizations
+# Bouton d'exécution des optimisations
+$btnApply = New-Object System.Windows.Forms.Button
+$btnApply.Text = "Appliquer"
+$btnApply.Location = New-Object System.Drawing.Point(230, 500)
+$btnApply.Add_Click({
+    foreach ($chk in $checkboxes) {
+        if ($chk.Checked) {
+            Write-Output "Activation: $($chk.Text)"
+        } else {
+            Write-Output "Désactivation: $($chk.Text)"
+        }
+    }
+})
+$tabOptimizations.Controls.Add($btnApply)
 
-# Fonction pour creer une case a cocher
-function Add-CheckBox {
-    param ($text, $groupBox, $yPosition)
-    $checkBox = New-Object System.Windows.Forms.CheckBox
-    $checkBox.Text = $text
-    $checkBox.ForeColor = [System.Drawing.Color]::White
-    $checkBox.AutoSize = $true
-    $checkBox.Location = New-Object System.Drawing.Point(10, $yPosition)
-    $groupBox.Controls.Add($checkBox)
-    return $checkBox
-}
-
-# Ajout des options dans chaque categorie
-$cbRestorePoint = Add-CheckBox "Create Restore Point" $essentialGroup 20
-$cbTempFiles = Add-CheckBox "Delete Temporary Files" $essentialGroup 45
-$cbTelemetry = Add-CheckBox "Disable Telemetry" $essentialGroup 70
-
-$cbNetworkBlock = Add-CheckBox "Adobe Network Block" $advancedGroup 20
-$cbDebloat = Add-CheckBox "Adobe Debloat" $advancedGroup 45
-$cbIPv6 = Add-CheckBox "Disable IPv6" $advancedGroup 70
-
-$cbDarkMode = Add-CheckBox "Enable Dark Theme" $customizeGroup 20
-$cbNumLock = Add-CheckBox "Enable NumLock on Startup" $customizeGroup 45
-$cbShowHidden = Add-CheckBox "Show Hidden Files" $customizeGroup 70
-
-$cbPerformanceMode = Add-CheckBox "Activate Ultimate Performance Mode" $performanceGroup 20
-
-# Boutons d'action
-$buttonApply = New-Object System.Windows.Forms.Button
-$buttonApply.Text = "Run Tweaks"
-$buttonApply.Size = New-Object System.Drawing.Size(180, 40)
-$buttonApply.Location = New-Object System.Drawing.Point(130, 620)
-$buttonApply.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
-$buttonApply.ForeColor = [System.Drawing.Color]::White
-$form.Controls.Add($buttonApply)
-
-$buttonUndo = New-Object System.Windows.Forms.Button
-$buttonUndo.Text = "Undo Selected Tweaks"
-$buttonUndo.Size = New-Object System.Drawing.Size(180, 40)
-$buttonUndo.Location = New-Object System.Drawing.Point(370, 620)
-$buttonUndo.BackColor = [System.Drawing.Color]::FromArgb(204, 0, 0)
-$buttonUndo.ForeColor = [System.Drawing.Color]::White
-$form.Controls.Add($buttonUndo)
-
-# Ajout de l'onglet des applications
-$installChrome = New-Object System.Windows.Forms.Button
-$installChrome.Text = "Install Google Chrome"
-$installChrome.Size = New-Object System.Drawing.Size(200, 40)
-$installChrome.Location = New-Object System.Drawing.Point(50, 50)
-$installChrome.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
-$installChrome.ForeColor = [System.Drawing.Color]::White
-$tabApps.Controls.Add($installChrome)
-
-$installVLC = New-Object System.Windows.Forms.Button
-$installVLC.Text = "Install VLC Media Player"
-$installVLC.Size = New-Object System.Drawing.Size(200, 40)
-$installVLC.Location = New-Object System.Drawing.Point(50, 110)
-$installVLC.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
-$installVLC.ForeColor = [System.Drawing.Color]::White
-$tabApps.Controls.Add($installVLC)
-
-# Afficher la fenetre
+# Lancer l'interface
 $form.ShowDialog()
