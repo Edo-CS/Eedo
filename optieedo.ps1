@@ -4,37 +4,37 @@ Add-Type -AssemblyName System.Drawing
 
 # Créer la fenêtre principale
 $form = New-Object System.Windows.Forms.Form
-$form.Text = Optimisations Windows
+$form.Text = "Optimisations Windows"  # Ajouter des guillemets autour du titre
 $form.Size = New-Object System.Drawing.Size(500, 400)
 
 # Créer les cases à cocher pour chaque optimisation
 $checkboxVisuals = New-Object System.Windows.Forms.CheckBox
-$checkboxVisuals.Text = Désactiver les effets visuels
+$checkboxVisuals.Text = "Désactiver les effets visuels"
 $checkboxVisuals.Location = New-Object System.Drawing.Point(20, 30)
 
 $checkboxServices = New-Object System.Windows.Forms.CheckBox
-$checkboxServices.Text = Désactiver les services inutiles
+$checkboxServices.Text = "Désactiver les services inutiles"
 $checkboxServices.Location = New-Object System.Drawing.Point(20, 70)
 
 $checkboxNotifications = New-Object System.Windows.Forms.CheckBox
-$checkboxNotifications.Text = Désactiver les notifications
+$checkboxNotifications.Text = "Désactiver les notifications"
 $checkboxNotifications.Location = New-Object System.Drawing.Point(20, 110)
 
 $checkboxTelemetry = New-Object System.Windows.Forms.CheckBox
-$checkboxTelemetry.Text = Désactiver la télémétrie
+$checkboxTelemetry.Text = "Désactiver la télémétrie"
 $checkboxTelemetry.Location = New-Object System.Drawing.Point(20, 150)
 
 $checkboxCortana = New-Object System.Windows.Forms.CheckBox
-$checkboxCortana.Text = Désactiver Cortana
+$checkboxCortana.Text = "Désactiver Cortana"
 $checkboxCortana.Location = New-Object System.Drawing.Point(20, 190)
 
 $checkboxApps = New-Object System.Windows.Forms.CheckBox
-$checkboxApps.Text = Supprimer les applications préinstallées
+$checkboxApps.Text = "Supprimer les applications préinstallées"
 $checkboxApps.Location = New-Object System.Drawing.Point(20, 230)
 
 # Bouton d'exécution des optimisations
 $buttonApply = New-Object System.Windows.Forms.Button
-$buttonApply.Text = Appliquer les optimisations
+$buttonApply.Text = "Appliquer les optimisations"
 $buttonApply.Size = New-Object System.Drawing.Size(200, 40)
 $buttonApply.Location = New-Object System.Drawing.Point(150, 270)
 
@@ -42,8 +42,8 @@ $buttonApply.Location = New-Object System.Drawing.Point(150, 270)
 function Apply-Optimizations {
     if ($checkboxVisuals.Checked) {
         # Désactivation des effets visuels
-        $VisualEffects = HKCUControl PanelDesktop
-        Set-ItemProperty -Path $VisualEffects -Name VisualFXSetting -Value 2
+        $VisualEffects = "HKCU:\Control Panel\Desktop"
+        Set-ItemProperty -Path $VisualEffects -Name "VisualFXSetting" -Value 2
     }
 
     if ($checkboxServices.Checked) {
@@ -57,26 +57,26 @@ function Apply-Optimizations {
 
     if ($checkboxNotifications.Checked) {
         # Désactivation des notifications
-        $NotificationSettings = HKCUSoftwareMicrosoftWindowsCurrentVersionPushNotifications
-        Set-ItemProperty -Path $NotificationSettings -Name ToastEnabled -Value 0
-        Set-ItemProperty -Path $NotificationSettings -Name NoToastApplicationNotification -Value 1
+        $NotificationSettings = "HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications"
+        Set-ItemProperty -Path $NotificationSettings -Name "ToastEnabled" -Value 0
+        Set-ItemProperty -Path $NotificationSettings -Name "NoToastApplicationNotification" -Value 1
     }
 
     if ($checkboxTelemetry.Checked) {
         # Désactivation de la télémétrie
-        $TelemetrySettings = HKLMSOFTWAREPoliciesMicrosoftWindowsDataCollection
-        Set-ItemProperty -Path $TelemetrySettings -Name AllowTelemetry -Value 0
+        $TelemetrySettings = "HKLM:\Software\Policies\Microsoft\Windows\DataCollection"
+        Set-ItemProperty -Path $TelemetrySettings -Name "AllowTelemetry" -Value 0
     }
 
     if ($checkboxCortana.Checked) {
         # Désactivation de Cortana
-        Set-ItemProperty -Path HKCUSoftwareMicrosoftWindowsCurrentVersionSearch -Name CortanaEnabled -Value 0
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaEnabled" -Value 0
     }
 
     if ($checkboxApps.Checked) {
         # Suppression des applications préinstallées
-        Get-AppxPackage Xbox  Remove-AppxPackage
-        Get-AppxPackage OneDrive  Remove-AppxPackage
+        Get-AppxPackage *Xbox* | Remove-AppxPackage
+        Get-AppxPackage *OneDrive* | Remove-AppxPackage
     }
 
     # Affichage d'un message de confirmation
