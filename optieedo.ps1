@@ -5,7 +5,7 @@ Add-Type -AssemblyName System.Drawing
 # Créer la fenêtre principale
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Optimisations Windows"  # Titre de la fenêtre
-$form.Size = New-Object System.Drawing.Size(600, 400)
+$form.Size = New-Object System.Drawing.Size(600, 500)
 $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
 $form.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28)  # Fond sombre
 $form.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\shell32.dll")
@@ -22,45 +22,87 @@ $form.Controls.Add($titleLabel)
 # Créer un panneau pour les optimisations
 $panelOptimizations = New-Object System.Windows.Forms.Panel
 $panelOptimizations.Location = New-Object System.Drawing.Point(20, 70)
-$panelOptimizations.Size = New-Object System.Drawing.Size(550, 250)
+$panelOptimizations.Size = New-Object System.Drawing.Size(550, 350)
 $panelOptimizations.BackColor = [System.Drawing.Color]::FromArgb(37, 37, 38)
 $panelOptimizations.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $form.Controls.Add($panelOptimizations)
 
-# Créer les cases à cocher pour chaque optimisation
+# Créer les labels pour chaque optimisation
+$labelVisuals = New-Object System.Windows.Forms.Label
+$labelVisuals.Text = "Désactiver les effets visuels (réduit l'utilisation des ressources)"
+$labelVisuals.ForeColor = [System.Drawing.Color]::White
+$labelVisuals.Location = New-Object System.Drawing.Point(10, 20)
+$labelVisuals.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelVisuals)
+
 $checkboxVisuals = New-Object System.Windows.Forms.CheckBox
-$checkboxVisuals.Text = "Désactiver les effets visuels"
-$checkboxVisuals.Location = New-Object System.Drawing.Point(10, 20)
+$checkboxVisuals.Text = "Désactiver"
+$checkboxVisuals.Location = New-Object System.Drawing.Point(450, 20)
 $checkboxVisuals.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxVisuals)
 
+$labelServices = New-Object System.Windows.Forms.Label
+$labelServices.Text = "Désactiver les services inutiles (comme Windows Update, etc.)"
+$labelServices.ForeColor = [System.Drawing.Color]::White
+$labelServices.Location = New-Object System.Drawing.Point(10, 60)
+$labelServices.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelServices)
+
 $checkboxServices = New-Object System.Windows.Forms.CheckBox
-$checkboxServices.Text = "Désactiver les services inutiles"
-$checkboxServices.Location = New-Object System.Drawing.Point(10, 60)
+$checkboxServices.Text = "Désactiver"
+$checkboxServices.Location = New-Object System.Drawing.Point(450, 60)
 $checkboxServices.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxServices)
 
+$labelNotifications = New-Object System.Windows.Forms.Label
+$labelNotifications.Text = "Désactiver les notifications Windows (pour éviter les distractions)"
+$labelNotifications.ForeColor = [System.Drawing.Color]::White
+$labelNotifications.Location = New-Object System.Drawing.Point(10, 100)
+$labelNotifications.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelNotifications)
+
 $checkboxNotifications = New-Object System.Windows.Forms.CheckBox
-$checkboxNotifications.Text = "Désactiver les notifications"
-$checkboxNotifications.Location = New-Object System.Drawing.Point(10, 100)
+$checkboxNotifications.Text = "Désactiver"
+$checkboxNotifications.Location = New-Object System.Drawing.Point(450, 100)
 $checkboxNotifications.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxNotifications)
 
+$labelTelemetry = New-Object System.Windows.Forms.Label
+$labelTelemetry.Text = "Désactiver la télémétrie (envoi de données de diagnostic à Microsoft)"
+$labelTelemetry.ForeColor = [System.Drawing.Color]::White
+$labelTelemetry.Location = New-Object System.Drawing.Point(10, 140)
+$labelTelemetry.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelTelemetry)
+
 $checkboxTelemetry = New-Object System.Windows.Forms.CheckBox
-$checkboxTelemetry.Text = "Désactiver la télémétrie"
-$checkboxTelemetry.Location = New-Object System.Drawing.Point(10, 140)
+$checkboxTelemetry.Text = "Désactiver"
+$checkboxTelemetry.Location = New-Object System.Drawing.Point(450, 140)
 $checkboxTelemetry.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxTelemetry)
 
+$labelCortana = New-Object System.Windows.Forms.Label
+$labelCortana.Text = "Désactiver Cortana (l'assistant virtuel)"
+$labelCortana.ForeColor = [System.Drawing.Color]::White
+$labelCortana.Location = New-Object System.Drawing.Point(10, 180)
+$labelCortana.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelCortana)
+
 $checkboxCortana = New-Object System.Windows.Forms.CheckBox
-$checkboxCortana.Text = "Désactiver Cortana"
-$checkboxCortana.Location = New-Object System.Drawing.Point(10, 180)
+$checkboxCortana.Text = "Désactiver"
+$checkboxCortana.Location = New-Object System.Drawing.Point(450, 180)
 $checkboxCortana.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxCortana)
 
+$labelApps = New-Object System.Windows.Forms.Label
+$labelApps.Text = "Supprimer les applications préinstallées comme OneDrive, Xbox"
+$labelApps.ForeColor = [System.Drawing.Color]::White
+$labelApps.Location = New-Object System.Drawing.Point(10, 220)
+$labelApps.Size = New-Object System.Drawing.Size(530, 20)
+$panelOptimizations.Controls.Add($labelApps)
+
 $checkboxApps = New-Object System.Windows.Forms.CheckBox
-$checkboxApps.Text = "Supprimer les applications préinstallées"
-$checkboxApps.Location = New-Object System.Drawing.Point(10, 220)
+$checkboxApps.Text = "Supprimer"
+$checkboxApps.Location = New-Object System.Drawing.Point(450, 220)
 $checkboxApps.ForeColor = [System.Drawing.Color]::White
 $panelOptimizations.Controls.Add($checkboxApps)
 
@@ -68,7 +110,7 @@ $panelOptimizations.Controls.Add($checkboxApps)
 $buttonApply = New-Object System.Windows.Forms.Button
 $buttonApply.Text = "Appliquer les optimisations"
 $buttonApply.Size = New-Object System.Drawing.Size(250, 40)
-$buttonApply.Location = New-Object System.Drawing.Point(175, 330)
+$buttonApply.Location = New-Object System.Drawing.Point(175, 420)
 $buttonApply.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)  # Bleu attrayant
 $buttonApply.ForeColor = [System.Drawing.Color]::White
 $buttonApply.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
